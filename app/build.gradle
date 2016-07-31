@@ -1,0 +1,52 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao' //GreenDao插件
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.0.0'
+    }
+}
+
+//配置GreenDao代码生成路径
+greendao {
+    //数据库schema版本号，迁移等操作会用到
+    schemaVersion 1
+    //通过gradle插件生成的数据库相关文件的包名，默认为你的entity所在的包名
+    daoPackage 'me.koterwong.greendaodemo.dao'
+    //这就是我们上面说到的自定义生成数据库文件的目录了，可以将生成的文件放到我们的java目录中，而不是build中，这样就不用额外的设置资源目录了
+    targetGenDir 'src/main/java'
+}
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+    defaultConfig {
+        applicationId "me.koterwong.greendaodemo"
+        minSdkVersion 14
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    testCompile 'junit:junit:4.12'
+    //配置GreenDao
+    compile 'org.greenrobot:greendao:3.0.1'  //库
+    compile 'org.greenrobot:greendao-generator:3.0.0' //代码生成器
+}
